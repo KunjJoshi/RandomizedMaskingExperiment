@@ -185,8 +185,6 @@ def parse_custom_text_files(textFilePath, separator = "\n\n", randomize = False)
         data = mask(data)
         end_time = time.time()
         print(f"Masked the whole data in {end_time - start_time} seconds")
-        num_times = len(re.findall('kay.mann@enron.com', data))
-        print(f"Target Email appearing {num_times} number of times")
     content = data.split(separator)
     content = [con.strip() for con in content if con.strip()]
     return content

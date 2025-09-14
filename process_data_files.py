@@ -19,22 +19,24 @@ def clean_data_files(folder_path):
     sorted_files = sorted(files, key=extract_percentage)
 
     for file in sorted_files:
+        if 'epoch' not in file:
+            continue
         base, ext = os.path.splitext(file)
         throwaway, epoch, percent = base.split('_')
-        percent = percent.strip('%')
+        percent = percent.replace('%', '')
         
         if 10 <= int(percent) <= 100:
-            new_epoch = "epoch1"
+            new_epoch = "1"
             new_percent = str(int(percent))
 
         if 110 <= int(percent) <= 200:
-            new_epoch = 'epoch2'
+            new_epoch = '2'
             new_percent = str(int(percent) - 100)
-        else:
-            new_epoch = 'epoch3'
+        elif 210 <= int(percent) <= 300:
+            new_epoch = '3'
             new_percent = str(int(percent) - 200)
 
-        new_filename = f'{new_epoch}_{new_percent}%.txt'
+        new_filename = f'{new_epoch}e{new_percent}.txt'
 
         old_file_path = os.path.join(folder_path, file)
         new_file_path = os.path.join(folder_path, new_filename)
