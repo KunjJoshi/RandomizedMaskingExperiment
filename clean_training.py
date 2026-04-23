@@ -30,8 +30,8 @@ def get_training_args(output_dir, lm_datasets):
         "weight_decay": 0.01,
         "push_to_hub": False,
         "num_train_epochs": 3,
-        "per_device_train_batch_size": 8,
-        "per_device_eval_batch_size": 8,
+        "per_device_train_batch_size": 50,
+        "per_device_eval_batch_size": 50,
         "fp16": True,
         "report_to": "none",
         "lr_scheduler_type": "linear",
@@ -67,6 +67,47 @@ def load_csv_dataset(train_path, val_path, train_key, val_key):
         "validation": val_dataset
     })
 
+class CustomTrainer(Trainer):
+    def __init__(self, *args, tokenizer = None, save_dir = "../data_seen", **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tokenizer = tokenizer
+        self.save_dir = save_dir
+        self.steps_per_epoch = len(self.get_train_dataloader())
+        self.steps_per_interval = self.steps_per_epoch // 10
+        self.current_epoch = 0
+        self.current_interval = 0
+        self.data_seen = []
+        self.data_processed = []
+        
+        os.makedirs(self.save_dir, exist_ok = True)
+    
+    def on_epoch_begin(self):
+        self.current_interval = 0
+        
+    def training_step(self, model, inputs, num_items_in_batch):
+        if self.state.global_step // self.steps_per_interval > self.current_interval:
+            self.save_data_interval()
+            self.current_interval += 1
+        self.data_seen.append(inputs)
+        return super().training_step(model, inputs, num_items_in_batch)
+    
+    def on_epoch_end(self):
+        self.save_data_interval(final = True)
+        self.data_seen = []
+        self.current_epoch += 1
+    
+    def save_data_interval(self, final = False):
+        interval_label = "final" if final else f"{(self.current_interval+1) * 10}%"
+        filename = f"epoch_{self.current_epoch + 1}_{interval_label}.txt"
+        filepath = os.path.join(self.save_dir, filename)
+        
+        with open(filepath, 'w', encoding = 'utf-8') as file:
+            for batch in self.data_seen:
+                decoded_texts = self.tokenizer.batch_decode(batch['input_ids'], skip_special_tokens = True)
+                for text in decoded_texts:
+                    file.write(text + '\n')
+        self.data_seen = []
+
 
 def train_model(
     model_name,
@@ -84,6 +125,7 @@ def train_model(
 
     # Load model + tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         device_map="auto",
@@ -116,7 +158,7 @@ def train_model(
     training_args = get_training_args(model_save_path, lm_datasets)
 
     # Trainer
-    trainer = Trainer(
+    trainer = CustomTrainer(
         model=model,
         args=training_args,
         train_dataset=lm_datasets["train"],
