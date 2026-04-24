@@ -49,8 +49,15 @@ with open('email_vals/tld.json', 'r') as file:
 
 TLD_STORE = tld_part['values']
 
-def mask_text(text, start, end, anchor, anchor_val):
-    fp = random.sample(FIRST_PART_STORE, 1)[0]
+def mask_text(text, email, start, end, anchor, anchor_val):
+    first_part, last_part = email.split('@')
+    if '.' in first_part:
+        parts = first_part.split('.')
+        for i in range(len(parts)):
+            parts[i] = random.sample(FIRST_PART_STORE, 1)[0]
+        fp = '.'.join(parts)
+    else:
+        fp = random.sample(FIRST_PART_STORE, 1)[0]
     domain = random.sample(DOMAIN_STORE, 1)[0]
     tld = random.sample(TLD_STORE, 1)[0]
 
@@ -96,11 +103,11 @@ def randomize_mask(dataset_path, output_path, data_key, pii_store_path = None):
             text = data[index]
             anchor = random.sample(['fp', 'domain','tld'], 1)[0]
             if anchor == 'fp':
-                masked_text = mask_text(text, start, end, anchor, fp)
+                masked_text = mask_text(text, email, start, end, anchor, fp)
             elif anchor == 'domain':
-                masked_text = mask_text(text, start, end, anchor, dom)
+                masked_text = mask_text(text, email, start, end, anchor, dom)
             elif anchor == 'tld':
-                masked_text = mask_text(text, start, end, anchor, tld)
+                masked_text = mask_text(text, email, start, end, anchor, tld)
 
             data[index] = masked_text
 
