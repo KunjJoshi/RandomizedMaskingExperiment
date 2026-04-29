@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import re
+import json
 
 def sample_random_prompts(texts, num_samples=25000, prompt_length=10):
     prompts = []
@@ -226,20 +227,27 @@ def calculate_batch_perplexity(
     sorted_data = sorted(results, key=lambda x: x["prompt_index"])
     return sorted_data
 
-def re_eval_perp(model_coll, token_word, prompt_path, prompt_key, batch_size = 50, max_length = 256):
+def re_eval_perp(model_coll, token_word, prompt_path, prompt_key, test_split, batch_size = 50, max_length = 256):
     prompts = pd.read_csv(prompt_path)[prompt_key].to_list()
     prompts = [str(prompt) for prompt in prompts if type(prompt)==str and prompt.strip() != ""]
     models = [os.path.join(model_coll, model) for model in os.listdir(model_coll)]
     perplexities = {}
     for model in models:
-        modelname = model.split('/')[-1]
-        print(f'Processing {modelname}')
-        outputs = calculate_batch_perplexity(prompts, model_name = model, batch_size = 5, device = 'cuda', max_length_override = 4096)
-        perplexities[modelname] = outputs
-    with open(f'jsons/perplexities_{token_word}.json', 'w') as file:
+        if os.path.isdir(model):
+            modelname = model.split('/')[-1]
+            print(f'Processing {modelname}')
+            outputs = calculate_batch_perplexity(prompts, model_name = model, batch_size = 5, device = 'cuda', max_length_override = 4096)
+            perplexities[modelname] = outputs
+    with open(f'jsons/perplexities_{token_word}_{test_split}.json', 'w') as file:
         json.dump(perplexities, file, indent=4)
 
-re_eval_perp('../models/gpt_base', 'gpt_base', '../datasets/enron/test_split.csv', 'message')
-re_eval_perp('../models/gpt_rmft', 'gpt_rmft', '../datasets/enron/test_split.csv', 'message')
-re_eval_perp('../models/gpt_dedup', 'gpt_dedup', '../datasets/enron/test_split.csv', 'message')
+import gc
+if __name__ == "__main__":
+    re_eval_perp('../models/gpt_base', 'gpt_base', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
+    torch.cuda.empty_cache()
+    gc.collect()
+    re_eval_perp('../models/gpt_rmft', 'gpt_rmft', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
+    torch.cuda.empty_cache()
+    gc.collect()
+    re_eval_perp('../models/gpt_dedup', 'gpt_dedup', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
 
