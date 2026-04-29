@@ -1,253 +1,283 @@
-import pandas as pd
-import random
-import re
+"""
+Fast, CPU-friendly perplexity evaluation for causal LMs (e.g. GPT-2).
+
+Key property: perplexity is computed from average NLL as:
+  log_ppl = nll / n_tokens
+  ppl = exp(log_ppl)
+
+On very OOD text, log_ppl can be large enough that exp(log_ppl) overflows in float64,
+producing `inf`. This module avoids that by returning `log_ppl` always, and returning
+`ppl` as a capped finite value plus a `ppl_was_capped` flag.
+"""
+
+from __future__ import annotations
+
+import argparse
 import json
-
-def sample_random_prompts(texts, num_samples=25000, prompt_length=10):
-    prompts = []
-    for text in texts:
-        tokens = text.split()
-        
-        if len(tokens) >= prompt_length:
-            start_index = random.randint(0, len(tokens) - prompt_length)
-            prompt = tokens[start_index:start_index + prompt_length]
-            prompts.append(' '.join(prompt))
-        
-        if len(prompts) >= num_samples:
-            break
-    
-    return prompts
-
-import re
-
-def parse_wet_file(file_path, max_docs=None):
-    """
-    Parse a WET file and return English language documents.
-    
-    Args:
-        file_path (str): Path to the .wet file
-        max_docs (int, optional): limit how many docs to parse (useful for sampling)
-    
-    Returns:
-        list of str: extracted English documents
-    """
-    texts = []
-    doc_lines = []
-    keep_doc = False
-    doc_started = False
-
-    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-        for line in f:
-            if line.startswith("WARC/1.0"):
-                # save the previous doc if it's English
-                if keep_doc and doc_lines:
-                    texts.append("".join(doc_lines).strip())
-                    if max_docs and len(texts) >= max_docs:
-                        break
-                # reset for new doc
-                doc_lines = []
-                keep_doc = False
-                doc_started = True
-
-            if "WARC-Identified-Content-Language: eng" in line:
-                keep_doc = True
-
-            if doc_started and not line.startswith("WARC/") and not line.startswith("Content-Length"):
-                doc_lines.append(line)
-
-        # last doc
-        if keep_doc and doc_lines:
-            texts.append("".join(doc_lines).strip())
-
-    return texts
-
-
-def save_prompts(save_path):
-    texts = parse_wet_file('crawl.wet')
-    prompts = sample_random_prompts(texts)
-    promptDF = {'prompt': prompts}
-    df = pd.DataFrame(promptDF)
-    df.to_csv(save_path, index = False)
-
-
-prompt_df_path = "../../NGramMemorization/compExp/promptsAndGenerations.csv"
-
-import os
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import pandas as pd
-import torch
-import re
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-import random
-
-def extract_emails(text):
-    emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', text)
-    emails = [email.lower() for email in emails]
-    return set(emails)
-
-ORIGINAL_SET = set()
-training_df = pd.read_csv('../datasets/enron/train_split.csv')
-
-from_list = training_df['from'].to_list()
-for email in from_list:
-    ORIGINAL_SET.add(email)
-
-def extract_emails_from_list(key):
-    column = training_df[key].to_list()
-    for em_list in column:
-        emails = extract_emails(em_list)
-        for email in emails:
-            if email.strip() != '':
-                ORIGINAL_SET.add(email)
-
-extract_emails_from_list('to')
-extract_emails_from_list('cc')
-extract_emails_from_list('bcc')
-
-print(f"Number of Unique Emails found: {len(ORIGINAL_SET)}")
-def num_times_email_leaked(emails, email):
-    num_times = 0
-    for mail in emails:
-        if mail == email:
-            num_times += 1
-    return num_times
-
-tokenizer = AutoTokenizer.from_pretrained("gpt2-xl")
-tokenizer.pad_token = tokenizer.eos_token
-
-from typing import List, Dict
 import math
+import os
+import sys
+from dataclasses import dataclass
+from typing import Iterable, Iterator, List, Optional, Sequence
+
+import pandas as pd
 import torch
 import torch.nn.functional as F
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm
-import pandas as pd
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-def load_model_and_tokenizer(model_name="gpt2-xl", device=None):
+
+@dataclass(frozen=True)
+class PerplexityResult:
+    prompt_index: int
+    prompt: str
+    n_tokens: int
+    nll: float
+    log_ppl: Optional[float]
+    ppl: Optional[float]
+    ppl_was_capped: bool
+
+
+def _safe_exp(log_x: float) -> tuple[float, bool]:
+    """
+    Compute exp(log_x) without returning inf due to overflow.
+
+    Returns:
+      (value, was_capped)
+    """
+    max_log = math.log(sys.float_info.max)  # ~709.78 for float64
+    if log_x > max_log:
+        return math.exp(max_log), True
+    if log_x < -max_log:
+        return math.exp(-max_log), True
+    return math.exp(log_x), False
+
+
+def load_model_and_tokenizer(
+    model_name_or_path: str,
+    device: Optional[str] = None,
+) -> tuple[AutoTokenizer, AutoModelForCausalLM, str]:
     if device is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    tokenizer = AutoTokenizer.from_pretrained("gpt2-xl")
-    model = AutoModelForCausalLM.from_pretrained(model_name)
-    # GPT2 tokenizer has no pad token by default -> set to eos
-    if tokenizer.pad_token is None:
+        device = "cpu"
+    tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
+    model = AutoModelForCausalLM.from_pretrained(model_name_or_path)
+
+    if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
+
     model.to(device)
     model.eval()
     return tokenizer, model, device
 
+
 def calculate_batch_perplexity(
-    prompts: List[str],
-    model_name: str = "gpt2-xl",
+    prompts: Sequence[str],
+    model_name_or_path: str = "gpt2-xl",
     batch_size: int = 8,
-    device: str = None,
-    truncate_long: bool = True,      # if True, truncate tokenized prompt to model max length
-    max_length_override: int = None  # if provided, override model config max length
-) -> pd.DataFrame:
-    tokenizer, model, device = load_model_and_tokenizer(model_name, device)
-    model_max_len = model.config.max_position_embeddings
-    if max_length_override is not None:
-        model_max_len = min(model_max_len, max_length_override)
+    device: Optional[str] = None,
+    max_length: Optional[int] = None,
+    show_progress: bool = True,
+) -> List[PerplexityResult]:
+    """
+    Compute per-prompt perplexities for a list of prompts.
 
-    results = []
-    # We'll process prompts in batches, but first tokenize per prompt to know lengths
-    # For simplicity we truncate very long prompts (you can request sliding-window approach)
-    encodings = []
-    for p in prompts:
-        enc = tokenizer.encode(p, add_special_tokens=False)
-        if len(enc) == 0:
-            # avoid zero-length input
-            enc = tokenizer.encode(tokenizer.eos_token, add_special_tokens=False)
-        if truncate_long and len(enc) > model_max_len:
-            enc = enc[-model_max_len:]  # keep last tokens (right-truncate) — typical for causal models
-        encodings.append(torch.tensor(enc, dtype=torch.long))
+    Notes:
+    - This computes standard teacher-forced LM NLL over the prompt tokens.
+    - Uses truncation to `max_length` (or the model max context length, whichever is smaller).
+    - Returns both `log_ppl` and a capped finite `ppl` to avoid `inf`.
+    """
+    tokenizer, model, device = load_model_and_tokenizer(model_name_or_path, device=device)
+    model_max_len = int(getattr(model.config, "max_position_embeddings", 1024))
+    effective_max_len = model_max_len if max_length is None else min(model_max_len, int(max_length))
 
-    # Process in batches
-    for i in tqdm(range(0, len(encodings), batch_size), desc="Batches"):
-        batch_enc = encodings[i : i + batch_size]
-        # pad to same length in batch
-        lengths = [e.size(0) for e in batch_enc]
-        batch_max_len = max(lengths)
-        input_ids = torch.full((len(batch_enc), batch_max_len), tokenizer.pad_token_id, dtype=torch.long)
-        attention_mask = torch.zeros((len(batch_enc), batch_max_len), dtype=torch.long)
-        for j, e in enumerate(batch_enc):
-            input_ids[j, : e.size(0)] = e
-            attention_mask[j, : e.size(0)] = 1
+    results: List[PerplexityResult] = []
+    indices_and_prompts = [(i, p) for i, p in enumerate(prompts) if isinstance(p, str) and p.strip() != ""]
 
-        input_ids = input_ids.to(device)
-        attention_mask = attention_mask.to(device)
+    rng = range(0, len(indices_and_prompts), batch_size)
+    iterator = tqdm(rng, desc="Perplexity batches", disable=not show_progress)
 
-        with torch.no_grad():
-            # Get logits: (batch, seq_len, vocab)
-            outputs = model(input_ids, attention_mask=attention_mask)
-            logits = outputs.logits
+    with torch.inference_mode():
+        for start in iterator:
+            batch = indices_and_prompts[start : start + batch_size]
+            batch_indices = [i for i, _ in batch]
+            batch_prompts = [p for _, p in batch]
 
-            # Shift logits and labels for causal LM loss
-            shift_logits = logits[..., :-1, :].contiguous()  # (batch, seq_len-1, vocab)
-            shift_labels = input_ids[..., 1:].contiguous()   # (batch, seq_len-1)
-            shift_mask = attention_mask[..., 1:].contiguous()  # (batch, seq_len-1)
+            enc = tokenizer(
+                batch_prompts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=effective_max_len,
+                add_special_tokens=False,
+            )
+            input_ids = enc["input_ids"].to(device)
+            attention_mask = enc["attention_mask"].to(device)
 
-            b, seqm1, vocab = shift_logits.shape
-            # Flatten for cross_entropy
+            # If a prompt tokenizes to length 0 (rare, but possible for weird inputs),
+            # replace with eos to keep shapes valid.
+            if input_ids.size(1) == 0:
+                input_ids = torch.full((input_ids.size(0), 1), tokenizer.eos_token_id, dtype=torch.long, device=device)
+                attention_mask = torch.ones_like(input_ids, dtype=torch.long, device=device)
+
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+            logits = outputs.logits  # (b, s, vocab)
+
+            shift_logits = logits[:, :-1, :].contiguous()
+            shift_labels = input_ids[:, 1:].contiguous()
+            shift_mask = attention_mask[:, 1:].contiguous()
+
+            bsz, seqlen_m1, vocab = shift_logits.shape
+            if seqlen_m1 == 0:
+                # All sequences are length 1 -> no next-token predictions available
+                for idx, prompt in zip(batch_indices, batch_prompts, strict=True):
+                    results.append(
+                        PerplexityResult(
+                            prompt_index=idx,
+                            prompt=prompt,
+                            n_tokens=0,
+                            nll=0.0,
+                            log_ppl=None,
+                            ppl=None,
+                            ppl_was_capped=False,
+                        )
+                    )
+                continue
+
             flat_logits = shift_logits.view(-1, vocab)
             flat_labels = shift_labels.view(-1)
 
-            # Compute per-token loss (no reduction)
-            # cross_entropy expects class indices in [0..vocab-1]; we will mask pad tokens below
-            losses_flat = F.cross_entropy(flat_logits, flat_labels, reduction='none')  # (b*(seqm1),)
-            losses = losses_flat.view(b, seqm1)  # (batch, seq_len-1)
+            # Ignore padded positions directly in CE (faster + avoids computing junk loss).
+            ignore_index = -100
+            flat_labels_masked = flat_labels.clone()
+            flat_labels_masked[shift_mask.view(-1) == 0] = ignore_index
 
-            # Mask out tokens where shift_labels == pad_token_id (we don't want to count pad tokens)
-            pad_mask = (shift_labels == tokenizer.pad_token_id)
-            losses = losses.masked_fill(pad_mask, 0.0)
-            token_counts = shift_mask.sum(dim=1)  # number of tokens contributing to loss per sample
+            token_losses = F.cross_entropy(
+                flat_logits,
+                flat_labels_masked,
+                reduction="none",
+                ignore_index=ignore_index,
+            ).view(bsz, seqlen_m1)
 
-            # Sum nll per sequence
-            nll_per_seq = losses.sum(dim=1).cpu().tolist()
-            token_counts = token_counts.cpu().tolist()
+            n_tokens = shift_mask.sum(dim=1)  # (b,)
+            nll = token_losses.sum(dim=1)  # (b,)
 
-            # Compute perplexity
-            for j in range(len(batch_enc)):
-                nll = float(nll_per_seq[j])
-                n_tokens = int(token_counts[j])
-                if n_tokens <= 0:
-                    # fallback (shouldn't happen for non-empty prompts)
-                    ppl = float("inf")
+            for bi in range(bsz):
+                n_tok = int(n_tokens[bi].item())
+                nll_val = float(nll[bi].item())
+                if n_tok <= 0:
+                    log_ppl = None
+                    ppl = None
+                    capped = False
                 else:
-                    ppl = math.exp(nll / n_tokens)
-                prompt_text = tokenizer.decode(batch_enc[j].cpu().tolist(), clean_up_tokenization_spaces=True, skip_special_tokens=True)
-                results.append({
-                    "prompt_index": i + j,
-                    "prompt": prompt_text,
-                    "n_tokens": n_tokens,
-                    "nll": nll,
-                    "ppl": ppl
-                })
+                    log_ppl = nll_val / n_tok
+                    ppl, capped = _safe_exp(log_ppl)
 
-    sorted_data = sorted(results, key=lambda x: x["prompt_index"])
-    return sorted_data
+                results.append(
+                    PerplexityResult(
+                        prompt_index=int(batch_indices[bi]),
+                        prompt=str(batch_prompts[bi]),
+                        n_tokens=n_tok,
+                        nll=nll_val,
+                        log_ppl=log_ppl,
+                        ppl=ppl,
+                        ppl_was_capped=capped,
+                    )
+                )
 
-def re_eval_perp(model_coll, token_word, prompt_path, prompt_key, test_split, batch_size = 50, max_length = 256):
-    prompts = pd.read_csv(prompt_path)[prompt_key].to_list()
-    prompts = [str(prompt) for prompt in prompts if type(prompt)==str and prompt.strip() != ""]
-    models = [os.path.join(model_coll, model) for model in os.listdir(model_coll)]
-    perplexities = {}
-    for model in models:
-        if os.path.isdir(model):
-            modelname = model.split('/')[-1]
-            print(f'Processing {modelname}')
-            outputs = calculate_batch_perplexity(prompts, model_name = model, batch_size = 5, device = 'cuda', max_length_override = 4096)
-            perplexities[modelname] = outputs
-    with open(f'jsons/perplexities_{token_word}_{test_split}.json', 'w') as file:
-        json.dump(perplexities, file, indent=4)
+    results.sort(key=lambda r: r.prompt_index)
+    return results
 
-import gc
+
+def _iter_csv_column(path: str, column: str, limit: Optional[int] = None) -> Iterator[str]:
+    df = pd.read_csv(path, usecols=[column])
+    values = df[column].tolist()
+    n = len(values) if limit is None else min(len(values), int(limit))
+    for i in range(n):
+        yield "" if values[i] is None else str(values[i])
+
+
+def evaluate_model_collection(
+    model_collection_dir: str,
+    prompts: Sequence[str],
+    batch_size: int,
+    device: str,
+    max_length: Optional[int],
+) -> dict[str, list[dict]]:
+    """
+    Evaluate every subdirectory model under `model_collection_dir`.
+    """
+    out: dict[str, list[dict]] = {}
+    for entry in sorted(os.listdir(model_collection_dir)):
+        model_path = os.path.join(model_collection_dir, entry)
+        if not os.path.isdir(model_path):
+            continue
+        print(f"Evaluating {entry} ({model_path})")
+        res = calculate_batch_perplexity(
+            prompts=prompts,
+            model_name_or_path=model_path,
+            batch_size=batch_size,
+            device=device,
+            max_length=max_length,
+        )
+        out[entry] = [r.__dict__ for r in res]
+    return out
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Compute prompt perplexities (safe on OOD inputs).")
+    parser.add_argument("--model", default="gpt2-xl", help="HF model name or local path.")
+    parser.add_argument("--device", default="cpu", help="cpu or cuda (default: cpu).")
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--max-length", type=int, default=None, help="Truncate to this many tokens (<= model limit).")
+    parser.add_argument(
+        "--num-threads",
+        type=int,
+        default=None,
+        help="Torch CPU threads (helps performance on CPU).",
+    )
+
+    parser.add_argument("--prompts-csv", type=str, default=None, help="Path to CSV containing prompts.")
+    parser.add_argument("--prompt-column", type=str, default="prompt", help="CSV column name for prompts.")
+    parser.add_argument("--limit", type=int, default=None, help="Limit number of prompts.")
+
+    parser.add_argument("--model-collection-dir", type=str, default=None, help="Directory of subfolder models to evaluate.")
+    parser.add_argument("--out-json", type=str, default=None, help="Where to write JSON results.")
+    args = parser.parse_args()
+
+    if args.num_threads is not None and args.device == "cpu":
+        torch.set_num_threads(int(args.num_threads))
+
+    if args.prompts_csv is None:
+        raise SystemExit("Missing --prompts-csv")
+
+    prompts = list(_iter_csv_column(args.prompts_csv, args.prompt_column, limit=args.limit))
+
+    if args.model_collection_dir:
+        payload = evaluate_model_collection(
+            model_collection_dir=args.model_collection_dir,
+            prompts=prompts,
+            batch_size=args.batch_size,
+            device=args.device,
+            max_length=args.max_length,
+        )
+    else:
+        res = calculate_batch_perplexity(
+            prompts=prompts,
+            model_name_or_path=args.model,
+            batch_size=args.batch_size,
+            device=args.device,
+            max_length=args.max_length,
+        )
+        payload = [r.__dict__ for r in res]
+
+    if args.out_json:
+        os.makedirs(os.path.dirname(args.out_json) or ".", exist_ok=True)
+        with open(args.out_json, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+    else:
+        print(json.dumps(payload[:3] if isinstance(payload, list) else payload, indent=2))
+
+
 if __name__ == "__main__":
-    re_eval_perp('../models/gpt_base', 'gpt_base', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
-    torch.cuda.empty_cache()
-    gc.collect()
-    re_eval_perp('../models/gpt_rmft', 'gpt_rmft', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
-    torch.cuda.empty_cache()
-    gc.collect()
-    re_eval_perp('../models/gpt_dedup', 'gpt_dedup', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
+    main()
 
