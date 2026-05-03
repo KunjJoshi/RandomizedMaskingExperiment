@@ -116,7 +116,7 @@ def num_times_email_leaked(emails, email):
 
 
 def load_tokenizer(model_name):
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
     tokenizer.pad_token = tokenizer.eos_token
     return tokenizer
 
