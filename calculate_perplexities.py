@@ -113,9 +113,6 @@ def num_times_email_leaked(emails, email):
             num_times += 1
     return num_times
 
-tokenizer = AutoTokenizer.from_pretrained("gpt2-xl")
-tokenizer.pad_token = tokenizer.eos_token
-
 from typing import List, Dict
 import math
 import sys
@@ -125,21 +122,39 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm
 import pandas as pd
 
-def load_model_and_tokenizer(model_name="gpt2-xl", device=None):
-    if device is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    tokenizer = AutoTokenizer.from_pretrained("gpt2-xl")
-    model = AutoModelForCausalLM.from_pretrained(model_name)
-    # GPT2 tokenizer has no pad token by default -> set to eos
+def load_model_and_tokenizer(model_name, device=None):
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model.to(device)
-    model.eval()
-    return tokenizer, model, device
+
+    use_cuda = torch.cuda.is_available() and (
+        device is None or str(device).startswith("cuda")
+    )
+    if use_cuda:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,
+            low_cpu_mem_usage=True,
+            device_map="auto",
+        )
+        model.eval()
+        actual_device = next(model.parameters()).device
+    else:
+        dev = device if device is not None else "cpu"
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            low_cpu_mem_usage=True,
+            torch_dtype=torch.float32,
+        )
+        model.eval()
+        model.to(dev)
+        actual_device = torch.device(dev) if isinstance(dev, str) else dev
+
+    return tokenizer, model, actual_device
 
 def calculate_batch_perplexity(
     prompts: List[str],
-    model_name: str = "gpt2-xl",
+    model_name: str,
     batch_size: int = 8,
     device: str = None,
     truncate_long: bool = True,      # if True, truncate tokenized prompt to model max length
@@ -232,27 +247,88 @@ def calculate_batch_perplexity(
     sorted_data = sorted(results, key=lambda x: x["prompt_index"])
     return sorted_data
 
-def re_eval_perp(model_coll, token_word, prompt_path, prompt_key, test_split, batch_size = 50, max_length = 256):
+def re_eval_perp(
+    ckpt,
+    token_word,
+    prompt_path,
+    prompt_key,
+    test_split,
+    batch_size=50,
+    max_length=256,
+):
     prompts = pd.read_csv(prompt_path)[prompt_key].to_list()
-    prompts = [str(prompt) for prompt in prompts if type(prompt)==str and prompt.strip() != ""]
-    models = [os.path.join(model_coll, model) for model in os.listdir(model_coll)]
-    perplexities = {}
-    for model in models:
-        if os.path.isdir(model):
-            modelname = model.split('/')[-1]
-            print(f'Processing {modelname}')
-            outputs = calculate_batch_perplexity(prompts, model_name = model, batch_size = 5, device = 'cuda', max_length_override = 4096)
-            perplexities[modelname] = outputs
-    with open(f'jsons/perplexities_{token_word}_{test_split}.json', 'w') as file:
-        json.dump(perplexities, file, indent=4)
+    prompts = [
+        str(prompt)
+        for prompt in prompts
+        if isinstance(prompt, str) and prompt.strip() != ""
+    ]
+    modelname = os.path.basename(os.path.normpath(ckpt))
+    print(f"Processing {modelname} ({ckpt})")
 
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    outputs = calculate_batch_perplexity(
+        prompts,
+        model_name=ckpt,
+        batch_size=batch_size,
+        device=device,
+        max_length_override=max_length,
+    )
+    perplexities = {modelname: outputs}
+    os.makedirs("jsons", exist_ok=True)
+    out_path = f"jsons/perplexities_{token_word}_{test_split}.json"
+    with open(out_path, "w") as file:
+        json.dump(perplexities, file, indent=4)
+    print(f"Wrote {out_path}")
+
+
+import argparse
 import gc
+
 if __name__ == "__main__":
-    re_eval_perp('../models/gpt_base', 'gpt_base', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
+    parser = argparse.ArgumentParser(description="Perplexity for a single checkpoint")
+    parser.add_argument(
+        "--checkpoint",
+        type=str,
+        required=True,
+        help="Path or HF id for one model checkpoint",
+    )
+    parser.add_argument(
+        "--training_type",
+        type=str,
+        default="gpt_base",
+        help="Tag for output filename (token_word)",
+    )
+    parser.add_argument(
+        "--prompt_path",
+        type=str,
+        required=True,
+        help="CSV with prompts",
+    )
+    parser.add_argument(
+        "--prompt_key",
+        type=str,
+        required=True,
+        help="Column name for prompt text",
+    )
+    parser.add_argument(
+        "--test_split",
+        type=str,
+        required=True,
+        help="Tag for output filename",
+    )
+    parser.add_argument("--batch_size", type=int, default=50)
+    parser.add_argument("--max_length", type=int, default=256)
+    args = parser.parse_args()
+
+    re_eval_perp(
+        ckpt=args.checkpoint,
+        token_word=args.training_type,
+        prompt_path=args.prompt_path,
+        prompt_key=args.prompt_key,
+        test_split=args.test_split,
+        batch_size=args.batch_size,
+        max_length=args.max_length,
+    )
     torch.cuda.empty_cache()
     gc.collect()
-    re_eval_perp('../models/gpt_rmft', 'gpt_rmft', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
-    torch.cuda.empty_cache()
-    gc.collect()
-    re_eval_perp('../models/gpt_dedup', 'gpt_dedup', '../datasets/prompts10k/train_split.csv', 'prompt', 'general_prompts')
 
