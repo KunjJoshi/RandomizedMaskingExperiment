@@ -144,6 +144,17 @@ def find_all_indices(text, substring):
         start = idx + 1
     return occurrences
 
+def count_leading_pad_tokens(row_1d, pad_id):
+    """Left-padded batches: real tokens start after any leading pad_token_id cells."""
+    if pad_id is None:
+        return 0
+    n = 0
+    for t in row_1d:
+        if int(t.item()) != int(pad_id):
+            break
+        n += 1
+    return n
+
 def compute_logprob_for_span(model, tokenizer, output_ids, tok_start, tok_end, device):
     """
     Compute sum of log-probs for tokens [tok_start, tok_end] (inclusive)
@@ -169,89 +180,97 @@ def compute_logprob_for_span(model, tokenizer, output_ids, tok_start, tok_end, d
     
     return result
 
-def re_evaluate(model_coll, token_word, testing_dataset_path, test_key, test_split_name, batch_size=60, max_length=64):  # ← batch_size 250 → 8
-    models    = [os.path.join(model_coll, m) for m in os.listdir(model_coll)]
+def re_evaluate(ckpt, token_word, testing_dataset_path, test_key, test_split_name, batch_size=60, max_length=64):  # ← batch_size 250 → 8
     prompt_df = pd.read_csv(testing_dataset_path)
     prompts   = prompt_df[test_key].to_list()
     if len(prompts) > 2500:
         prompts = prompts[:2500]
 
-    for ckpt in models:
-        try:
-            print(f'Processing {ckpt}')
-            modelname = ckpt.split('/')[-1]
+    try:
+        print(f'Processing {ckpt}')
+        modelname = ckpt.split('/')[-1]
 
-            tokenizer = load_tokenizer(ckpt)
-            model = AutoModelForCausalLM.from_pretrained(
-                ckpt,
-                return_dict=True,
-                device_map="auto",
-                low_cpu_mem_usage=True,
-                torch_dtype=torch.float16,
-            )
-            model.eval()
-            device = next(model.parameters()).device  # ← respect device_map
+        tokenizer = load_tokenizer(ckpt)
+        model = AutoModelForCausalLM.from_pretrained(
+            ckpt,
+            return_dict=True,
+            device_map="auto",
+            low_cpu_mem_usage=True,
+            torch_dtype=torch.float16,
+        )
+        model.eval()
+        device = next(model.parameters()).device  # ← respect device_map
 
-            directory = f'results/{token_word}'
-            os.makedirs(directory, exist_ok=True)
-            leakageCsv = f'results/{token_word}/{modelname}_leakage_{test_split_name}.csv'
-            summary = {'prompt': [], 'generation': [], 'leaked_email': [], 'logprob': []}
+        directory = f'results/{token_word}'
+        os.makedirs(directory, exist_ok=True)
+        leakageCsv = f'results/{token_word}/{modelname}_leakage_{test_split_name}.csv'
+        summary = {'prompt': [], 'generation': [], 'leaked_email': [], 'logprob': []}
 
-            for i in tqdm(range(0, len(prompts), batch_size), desc="Extracting Emails"):
-                batched_prompts = prompts[i : i + batch_size]
+        for i in tqdm(range(0, len(prompts), batch_size), desc="Extracting Emails"):
+            batched_prompts = prompts[i : i + batch_size]
 
-                inputs = tokenizer(
-                    batched_prompts,
-                    return_tensors='pt',
-                    truncation=True,
-                    max_length=max_length,
-                    padding=True,               # ← needed for batched generation
-                ).to(device)
+            inputs = tokenizer(
+                batched_prompts,
+                return_tensors='pt',
+                truncation=True,
+                max_length=max_length,
+                padding=True,               # ← needed for batched generation
+            ).to(device)
 
-                with torch.no_grad():
-                    outputs = model.generate(
-                        **inputs,
-                        max_new_tokens=max_length,  # ← max_new_tokens avoids re-counting prompt
-                        do_sample=False,
-                    )
-                outputs_cpu = outputs.cpu()         # ← pull to CPU before the scoring loop
-                del outputs
-                torch.cuda.empty_cache()
+            with torch.no_grad():
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=max_length,  # ← max_new_tokens avoids re-counting prompt
+                    do_sample=False,
+                )
+            outputs_cpu = outputs.cpu()         # ← pull to CPU before the scoring loop
+            del outputs
+            torch.cuda.empty_cache()
 
-                generations = tokenizer.batch_decode(outputs_cpu, skip_special_tokens=True)
+            generations = tokenizer.batch_decode(outputs_cpu, skip_special_tokens=True)
+            pad_id = tokenizer.pad_token_id
 
-                for no, generation in enumerate(generations):
-                    emails_leaked = extract_emails(generation)
-                    for email in emails_leaked:
-                        for char_start, char_end in find_all_indices(generation, email):
-                            tok_start, tok_end = get_token_indices(
-                                tokenizer, generation, char_start, char_end
-                            )
-                            if tok_start is None or tok_start == 0:
-                                continue
+            for no, generation in enumerate(generations):
+                row_ids = outputs_cpu[no]
+                # batch_decode skips pads; get_token_indices is relative to that text — align to padded row
+                leading_pad = count_leading_pad_tokens(row_ids, pad_id)
 
-                            logprob = compute_logprob_for_span(
-                                model, tokenizer, outputs_cpu[no], tok_start, tok_end, device
-                            )
+                emails_leaked = extract_emails(generation)
+                for email in emails_leaked:
+                    for char_start, char_end in find_all_indices(generation, email):
+                        tok_start, tok_end = get_token_indices(
+                            tokenizer, generation, char_start, char_end
+                        )
+                        if tok_start is None or tok_end is None:
+                            continue
 
-                            summary['prompt'].append(batched_prompts[no])
-                            summary['generation'].append(generation)
-                            summary['leaked_email'].append(email)
-                            summary['logprob'].append(logprob)
+                        a_start = leading_pad + tok_start
+                        a_end = leading_pad + tok_end
+                        # Causal LM: no predecessor logit for the first position of the full sequence
+                        if a_start == 0:
+                            continue
 
-                del inputs, outputs_cpu, generations
-                gc.collect()
-                torch.cuda.empty_cache()
+                        logprob = compute_logprob_for_span(
+                            model, tokenizer, row_ids, a_start, a_end, device
+                        )
 
-            pd.DataFrame(summary).to_csv(leakageCsv, index=False)
+                        summary['prompt'].append(batched_prompts[no])
+                        summary['generation'].append(generation)
+                        summary['leaked_email'].append(email)
+                        summary['logprob'].append(logprob)
 
-            # Free model between checkpoints
-            del model
+            del inputs, outputs_cpu, generations
             gc.collect()
             torch.cuda.empty_cache()
-        except Exception as e:
-            print(f"Exception Encountered: {e}. Skipping Checkpoint {ckpt}")
-            continue
+
+        pd.DataFrame(summary).to_csv(leakageCsv, index=False)
+
+        # Free model between checkpoints
+        del model
+        gc.collect()
+        torch.cuda.empty_cache()
+    except Exception as e:
+        print(f"Exception Encountered: {e}. Skipping Checkpoint {ckpt}")
 
 
 
@@ -261,12 +280,19 @@ import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract Data using a Testing Dataset")
 
-    parser.add_argument("--model_collection_path", type=str, required=True, help="Collection of models")
+    parser.add_argument("--model_path", type=str, required=True, help="Collection of models")
     parser.add_argument("--training_type", type=str, default="gpt_base", help="Type of training/ token word")
     parser.add_argument("--test_dataset_path", type=str, required=True, help="Path to testing CSV file")
     parser.add_argument("--test_key", type=str, required=True, help="Column name for training text")
     parser.add_argument("--test_split", type=str, required=True, help="Token word you want to give for this testing dataset")
-    parser.add_argument("--batch_size", type=int, help="Batch Size for Email Extraction")
+    parser.add_argument("--batch_size", type=int, default=60, help="Batch Size for Email Extraction")
     args = parser.parse_args()
 
-    re_evaluate(model_coll = args.model_collection_path, token_word = args.training_type, testing_dataset_path = args.test_dataset_path, test_key = args.test_key, test_split_name = args.test_split, batch_size = args.batch_size)
+    re_evaluate(
+        ckpt=args.model_path,
+        token_word=args.training_type,
+        testing_dataset_path=args.test_dataset_path,
+        test_key=args.test_key,
+        test_split_name=args.test_split,
+        batch_size=args.batch_size,
+    )
