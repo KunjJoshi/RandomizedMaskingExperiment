@@ -9,3 +9,4 @@ pandas>=2.0.0
 tqdm>=4.67.0
 matplotlib>=3.7.0
 datasketch>=1.6.4
+python-Levenshtein
