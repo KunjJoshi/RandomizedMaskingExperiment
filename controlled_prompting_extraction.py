@@ -177,8 +177,8 @@ if __name__ == "__main__":
     parser.add_argument("--max_length", type=int, help="Max Length")
     args = parser.parse_args()
 
-    token_pl = leakage_context(ckpt = parser.checkpoint, token_word = parser.token_word, prompt_list = controlled_prompts, max_length = parser.max_length)
-    with open(f'jsons/context_extraction_{parser.token_word}.json', 'w') as file:
+    token_pl = leakage_context(ckpt = args.checkpoint, token_word = args.token_word, prompt_list = controlled_prompts, max_length = args.max_length)
+    with open(f'jsons/context_extraction_{args.token_word}.json', 'w') as file:
         json.dump(token_pl, file, indent=4)
 
 
