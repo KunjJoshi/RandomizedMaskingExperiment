@@ -39,13 +39,13 @@ base_leaks = set(base_df['leaked_email'].to_list())
 rmft_leaks = set(rmft_df['leaked_email'].to_list())
 dedup_leaks = set(dedup_df['leaked_email'].to_list())
 
-base_logprobs_og = base_df[base_df['leaked_email'] in (base_leaks & ORIGINAL_SET)]['logprob'].to_list()
-rmft_logprobs_og = rmft_df[rmft_df['leaked_email'] in (rmft_leaks & ORIGINAL_SET)]['logprob'].to_list()
-dedup_logprobs_og = dedup_df[dedup_df['leaked_email'] in (dedup_leaks & ORIGINAL_SET)]['logprob'].to_list()
+base_logprobs_og = base_df[base_df['leaked_email'].isin(base_leaks & ORIGINAL_SET)]['logprob'].to_list()
+rmft_logprobs_og = rmft_df[rmft_df['leaked_email'].isin(rmft_leaks & ORIGINAL_SET)]['logprob'].to_list()
+dedup_logprobs_og = dedup_df[dedup_df['leaked_email'].isin(dedup_leaks & ORIGINAL_SET)]['logprob'].to_list()
 
-base_logprobs_fake = base_df[base_df['leaked_email'] in (base_leaks - ORIGINAL_SET)]['logprob'].to_list()
-rmft_logprobs_fake = rmft_df[rmft_df['leaked_email'] in (rmft_leaks - ORIGINAL_SET)]['logprob'].to_list()
-dedup_logprobs_fake = dedup_df[dedup_df['leaked_email'] in (dedup_leaks - ORIGINAL_SET)]['logprob'].to_list()
+base_logprobs_fake = base_df[base_df['leaked_email'].isin(base_leaks - ORIGINAL_SET)]['logprob'].to_list()
+rmft_logprobs_fake = rmft_df[rmft_df['leaked_email'].isin(rmft_leaks - ORIGINAL_SET)]['logprob'].to_list()
+dedup_logprobs_fake = dedup_df[dedup_df['leaked_email'].isin(dedup_leaks - ORIGINAL_SET)]['logprob'].to_list()
 
 if len(base_logprobs_og) > 0 and len(base_logprobs_fake) > 0:
     avg_og = sum(base_logprobs_og)/len(base_logprobs_og)
@@ -75,9 +75,9 @@ rmft_leak_prompts = set(rmft_df['prompt'].to_list())
 dedup_leak_prompts = set(dedup_df['prompt'].to_list())
 
 print(f"=======SUMMARY==========")
-print(f"\n Base Email Leaks: {(len(base_leaks)/len(ORIGINAL_SET))*100}")
-print(f"\n RMFT Email Leaks: {(len(rmft_leaks)/len(ORIGINAL_SET))*100}")
-print(f"\n Dedup Email Leaks: {(len(dedup_leaks)/len(ORIGINAL_SET))*100}")
+print(f"\n Base Email Leaks: {(len(base_leaks & ORIGINAL_SET)/len(ORIGINAL_SET))*100}")
+print(f"\n RMFT Email Leaks: {(len(rmft_leaks & ORIGINAL_SET)/len(ORIGINAL_SET))*100}")
+print(f"\n Dedup Email Leaks: {(len(dedup_leaks & ORIGINAL_SET)/len(ORIGINAL_SET))*100}")
 
 
 if base_logdiff > 0:
