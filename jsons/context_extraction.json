@@ -1,0 +1,1511 @@
+[
+    {
+        "email": "jeffseely_009035@netstock.customer-email.com",
+        "stages": [
+            "j",
+            "jeff",
+            "jeffsee",
+            "jeffseely",
+            "jeffseely_",
+            "jeffseely_00",
+            "jeffseely_0090",
+            "jeffseely_009035",
+            "jeffseely_009035@",
+            "jeffseely_009035@net",
+            "jeffseely_009035@netstock",
+            "jeffseely_009035@netstock.",
+            "jeffseely_009035@netstock.custom",
+            "jeffseely_009035@netstock.customer",
+            "jeffseely_009035@netstock.customer-",
+            "jeffseely_009035@netstock.customer-email",
+            "jeffseely_009035@netstock.customer-email.",
+            "jeffseely_009035@netstock.customer-email.com"
+        ]
+    },
+    {
+        "email": "elsa.villarreal@enron.com",
+        "stages": [
+            "els",
+            "elsa",
+            "elsa.",
+            "elsa.vill",
+            "elsa.villar",
+            "elsa.villarreal",
+            "elsa.villarreal@",
+            "elsa.villarreal@en",
+            "elsa.villarreal@enron",
+            "elsa.villarreal@enron.",
+            "elsa.villarreal@enron.com"
+        ]
+    },
+    {
+        "email": "joe.parks@enron.com",
+        "stages": [
+            "j",
+            "joe",
+            "joe.",
+            "joe.par",
+            "joe.parks",
+            "joe.parks@",
+            "joe.parks@en",
+            "joe.parks@enron",
+            "joe.parks@enron.",
+            "joe.parks@enron.com"
+        ]
+    },
+    {
+        "email": "kourtney.nelson@enron.com",
+        "stages": [
+            "k",
+            "kourt",
+            "kourtney",
+            "kourtney.",
+            "kourtney.n",
+            "kourtney.nelson",
+            "kourtney.nelson@",
+            "kourtney.nelson@en",
+            "kourtney.nelson@enron",
+            "kourtney.nelson@enron.",
+            "kourtney.nelson@enron.com"
+        ]
+    },
+    {
+        "email": "steven.fisher@enron.com",
+        "stages": [
+            "ste",
+            "steven",
+            "steven.",
+            "steven.f",
+            "steven.fisher",
+            "steven.fisher@",
+            "steven.fisher@en",
+            "steven.fisher@enron",
+            "steven.fisher@enron.",
+            "steven.fisher@enron.com"
+        ]
+    },
+    {
+        "email": "portland.desk@enron.com",
+        "stages": [
+            "port",
+            "portland",
+            "portland.",
+            "portland.des",
+            "portland.desk",
+            "portland.desk@",
+            "portland.desk@en",
+            "portland.desk@enron",
+            "portland.desk@enron.",
+            "portland.desk@enron.com"
+        ]
+    },
+    {
+        "email": "donna.johnson@enron.com",
+        "stages": [
+            "d",
+            "donna",
+            "donna.",
+            "donna.john",
+            "donna.johnson",
+            "donna.johnson@",
+            "donna.johnson@en",
+            "donna.johnson@enron",
+            "donna.johnson@enron.",
+            "donna.johnson@enron.com"
+        ]
+    },
+    {
+        "email": "alisa.mellencamp@enron.com",
+        "stages": [
+            "al",
+            "alisa",
+            "alisa.",
+            "alisa.m",
+            "alisa.mell",
+            "alisa.mellenc",
+            "alisa.mellencamp",
+            "alisa.mellencamp@",
+            "alisa.mellencamp@en",
+            "alisa.mellencamp@enron",
+            "alisa.mellencamp@enron.",
+            "alisa.mellencamp@enron.com"
+        ]
+    },
+    {
+        "email": "wayne.gardner@enron.com",
+        "stages": [
+            "wayne",
+            "wayne.",
+            "wayne.gard",
+            "wayne.gardner",
+            "wayne.gardner@",
+            "wayne.gardner@en",
+            "wayne.gardner@enron",
+            "wayne.gardner@enron.",
+            "wayne.gardner@enron.com"
+        ]
+    },
+    {
+        "email": "ed.dowling@msl.redstone.army.mil",
+        "stages": [
+            "ed",
+            "ed.",
+            "ed.d",
+            "ed.dow",
+            "ed.dowling",
+            "ed.dowling@",
+            "ed.dowling@ms",
+            "ed.dowling@msl",
+            "ed.dowling@msl.",
+            "ed.dowling@msl.red",
+            "ed.dowling@msl.redstone",
+            "ed.dowling@msl.redstone.",
+            "ed.dowling@msl.redstone.arm",
+            "ed.dowling@msl.redstone.army",
+            "ed.dowling@msl.redstone.army.",
+            "ed.dowling@msl.redstone.army.mil"
+        ]
+    },
+    {
+        "email": "dgiron@enron.com",
+        "stages": [
+            "d",
+            "dg",
+            "dgiron",
+            "dgiron@",
+            "dgiron@en",
+            "dgiron@enron",
+            "dgiron@enron.",
+            "dgiron@enron.com"
+        ]
+    },
+    {
+        "email": "michelle.nelson@enron.com",
+        "stages": [
+            "mic",
+            "michelle",
+            "michelle.",
+            "michelle.n",
+            "michelle.nelson",
+            "michelle.nelson@",
+            "michelle.nelson@en",
+            "michelle.nelson@enron",
+            "michelle.nelson@enron.",
+            "michelle.nelson@enron.com"
+        ]
+    },
+    {
+        "email": "gemanix@aol.com",
+        "stages": [
+            "g",
+            "geman",
+            "gemanix",
+            "gemanix@",
+            "gemanix@a",
+            "gemanix@aol",
+            "gemanix@aol.",
+            "gemanix@aol.com"
+        ]
+    },
+    {
+        "email": "karla.feldman@enron.com",
+        "stages": [
+            "kar",
+            "karla",
+            "karla.",
+            "karla.feld",
+            "karla.feldman",
+            "karla.feldman@",
+            "karla.feldman@en",
+            "karla.feldman@enron",
+            "karla.feldman@enron.",
+            "karla.feldman@enron.com"
+        ]
+    },
+    {
+        "email": "dhunter@smithandkempton.com",
+        "stages": [
+            "d",
+            "dhunter",
+            "dhunter@",
+            "dhunter@smith",
+            "dhunter@smithand",
+            "dhunter@smithandke",
+            "dhunter@smithandkem",
+            "dhunter@smithandkempton",
+            "dhunter@smithandkempton.",
+            "dhunter@smithandkempton.com"
+        ]
+    },
+    {
+        "email": "liz.taylor@enron.com",
+        "stages": [
+            "l",
+            "liz",
+            "liz.",
+            "liz.t",
+            "liz.taylor",
+            "liz.taylor@",
+            "liz.taylor@en",
+            "liz.taylor@enron",
+            "liz.taylor@enron.",
+            "liz.taylor@enron.com"
+        ]
+    },
+    {
+        "email": "rubena.buerger@enron.com",
+        "stages": [
+            "rub",
+            "rubena",
+            "rubena.",
+            "rubena.bu",
+            "rubena.buer",
+            "rubena.buerger",
+            "rubena.buerger@",
+            "rubena.buerger@en",
+            "rubena.buerger@enron",
+            "rubena.buerger@enron.",
+            "rubena.buerger@enron.com"
+        ]
+    },
+    {
+        "email": "ronl@cpuc.ca.gov",
+        "stages": [
+            "ron",
+            "ronl",
+            "ronl@",
+            "ronl@cp",
+            "ronl@cpuc",
+            "ronl@cpuc.",
+            "ronl@cpuc.ca",
+            "ronl@cpuc.ca.",
+            "ronl@cpuc.ca.gov"
+        ]
+    },
+    {
+        "email": "stacy.runswick@enron.com",
+        "stages": [
+            "st",
+            "stacy",
+            "stacy.",
+            "stacy.run",
+            "stacy.runswick",
+            "stacy.runswick@",
+            "stacy.runswick@en",
+            "stacy.runswick@enron",
+            "stacy.runswick@enron.",
+            "stacy.runswick@enron.com"
+        ]
+    },
+    {
+        "email": "8777208398.48919@pagenetmessage.net",
+        "stages": [
+            "8",
+            "8777",
+            "8777208",
+            "8777208398",
+            "8777208398.",
+            "8777208398.489",
+            "8777208398.48919",
+            "8777208398.48919@",
+            "8777208398.48919@p",
+            "8777208398.48919@pagen",
+            "8777208398.48919@pagenet",
+            "8777208398.48919@pagenetmessage",
+            "8777208398.48919@pagenetmessage.",
+            "8777208398.48919@pagenetmessage.net"
+        ]
+    },
+    {
+        "email": "anne.koehler@enron.com",
+        "stages": [
+            "anne",
+            "anne.",
+            "anne.k",
+            "anne.koe",
+            "anne.koehler",
+            "anne.koehler@",
+            "anne.koehler@en",
+            "anne.koehler@enron",
+            "anne.koehler@enron.",
+            "anne.koehler@enron.com"
+        ]
+    },
+    {
+        "email": "chad.clark@enron.com",
+        "stages": [
+            "ch",
+            "chad",
+            "chad.",
+            "chad.cl",
+            "chad.clark",
+            "chad.clark@",
+            "chad.clark@en",
+            "chad.clark@enron",
+            "chad.clark@enron.",
+            "chad.clark@enron.com"
+        ]
+    },
+    {
+        "email": "jgallagher@epsa.org",
+        "stages": [
+            "j",
+            "jgall",
+            "jgallagher",
+            "jgallagher@",
+            "jgallagher@ep",
+            "jgallagher@epsa",
+            "jgallagher@epsa.",
+            "jgallagher@epsa.org"
+        ]
+    },
+    {
+        "email": "bhawkin@enron.com",
+        "stages": [
+            "b",
+            "bhaw",
+            "bhawkin",
+            "bhawkin@",
+            "bhawkin@en",
+            "bhawkin@enron",
+            "bhawkin@enron.",
+            "bhawkin@enron.com"
+        ]
+    },
+    {
+        "email": "reliantenergy@ebillcare.com",
+        "stages": [
+            "rel",
+            "reliant",
+            "reliantenergy",
+            "reliantenergy@",
+            "reliantenergy@eb",
+            "reliantenergy@ebill",
+            "reliantenergy@ebillcare",
+            "reliantenergy@ebillcare.",
+            "reliantenergy@ebillcare.com"
+        ]
+    },
+    {
+        "email": "gregg.penman@enron.com",
+        "stages": [
+            "gre",
+            "gregg",
+            "gregg.",
+            "gregg.pen",
+            "gregg.penman",
+            "gregg.penman@",
+            "gregg.penman@en",
+            "gregg.penman@enron",
+            "gregg.penman@enron.",
+            "gregg.penman@enron.com"
+        ]
+    },
+    {
+        "email": "dave.nommensen@enron.com",
+        "stages": [
+            "d",
+            "dave",
+            "dave.",
+            "dave.n",
+            "dave.nomm",
+            "dave.nommensen",
+            "dave.nommensen@",
+            "dave.nommensen@en",
+            "dave.nommensen@enron",
+            "dave.nommensen@enron.",
+            "dave.nommensen@enron.com"
+        ]
+    },
+    {
+        "email": "joan.veselack@enron.com",
+        "stages": [
+            "jo",
+            "joan",
+            "joan.",
+            "joan.ves",
+            "joan.vesel",
+            "joan.veselack",
+            "joan.veselack@",
+            "joan.veselack@en",
+            "joan.veselack@enron",
+            "joan.veselack@enron.",
+            "joan.veselack@enron.com"
+        ]
+    },
+    {
+        "email": "eric.gillaspie@enron.com",
+        "stages": [
+            "eric",
+            "eric.",
+            "eric.g",
+            "eric.gill",
+            "eric.gillasp",
+            "eric.gillaspie",
+            "eric.gillaspie@",
+            "eric.gillaspie@en",
+            "eric.gillaspie@enron",
+            "eric.gillaspie@enron.",
+            "eric.gillaspie@enron.com"
+        ]
+    },
+    {
+        "email": "mike.e.kelly@enron.com",
+        "stages": [
+            "m",
+            "mike",
+            "mike.",
+            "mike.e",
+            "mike.e.",
+            "mike.e.ke",
+            "mike.e.kelly",
+            "mike.e.kelly@",
+            "mike.e.kelly@en",
+            "mike.e.kelly@enron",
+            "mike.e.kelly@enron.",
+            "mike.e.kelly@enron.com"
+        ]
+    },
+    {
+        "email": "matt.motsinger@enron.com",
+        "stages": [
+            "m",
+            "matt",
+            "matt.",
+            "matt.m",
+            "matt.mots",
+            "matt.motsinger",
+            "matt.motsinger@",
+            "matt.motsinger@en",
+            "matt.motsinger@enron",
+            "matt.motsinger@enron.",
+            "matt.motsinger@enron.com"
+        ]
+    },
+    {
+        "email": "greg.piper@enron.com",
+        "stages": [
+            "greg",
+            "greg.",
+            "greg.p",
+            "greg.piper",
+            "greg.piper@",
+            "greg.piper@en",
+            "greg.piper@enron",
+            "greg.piper@enron.",
+            "greg.piper@enron.com"
+        ]
+    },
+    {
+        "email": "edward.sacks@enron.com",
+        "stages": [
+            "ed",
+            "edward",
+            "edward.",
+            "edward.s",
+            "edward.sacks",
+            "edward.sacks@",
+            "edward.sacks@en",
+            "edward.sacks@enron",
+            "edward.sacks@enron.",
+            "edward.sacks@enron.com"
+        ]
+    },
+    {
+        "email": "karima.husain@enron.com",
+        "stages": [
+            "kar",
+            "karima",
+            "karima.",
+            "karima.hus",
+            "karima.husain",
+            "karima.husain@",
+            "karima.husain@en",
+            "karima.husain@enron",
+            "karima.husain@enron.",
+            "karima.husain@enron.com"
+        ]
+    },
+    {
+        "email": "don.black@enron.com",
+        "stages": [
+            "don",
+            "don.",
+            "don.black",
+            "don.black@",
+            "don.black@en",
+            "don.black@enron",
+            "don.black@enron.",
+            "don.black@enron.com"
+        ]
+    },
+    {
+        "email": "chelsea.lozano@enron.com",
+        "stages": [
+            "chel",
+            "chelsea",
+            "chelsea.",
+            "chelsea.lo",
+            "chelsea.loz",
+            "chelsea.lozano",
+            "chelsea.lozano@",
+            "chelsea.lozano@en",
+            "chelsea.lozano@enron",
+            "chelsea.lozano@enron.",
+            "chelsea.lozano@enron.com"
+        ]
+    },
+    {
+        "email": "stephanie.harris@enron.com",
+        "stages": [
+            "step",
+            "stephan",
+            "stephanie",
+            "stephanie.",
+            "stephanie.har",
+            "stephanie.harris",
+            "stephanie.harris@",
+            "stephanie.harris@en",
+            "stephanie.harris@enron",
+            "stephanie.harris@enron.",
+            "stephanie.harris@enron.com"
+        ]
+    },
+    {
+        "email": "loretta.brelsford@enron.com",
+        "stages": [
+            "lore",
+            "loretta",
+            "loretta.",
+            "loretta.b",
+            "loretta.brel",
+            "loretta.brels",
+            "loretta.brelsford",
+            "loretta.brelsford@",
+            "loretta.brelsford@en",
+            "loretta.brelsford@enron",
+            "loretta.brelsford@enron.",
+            "loretta.brelsford@enron.com"
+        ]
+    },
+    {
+        "email": "christie.patrick@enron.com",
+        "stages": [
+            "christ",
+            "christie",
+            "christie.",
+            "christie.patrick",
+            "christie.patrick@",
+            "christie.patrick@en",
+            "christie.patrick@enron",
+            "christie.patrick@enron.",
+            "christie.patrick@enron.com"
+        ]
+    },
+    {
+        "email": "eke@aelaw.com",
+        "stages": [
+            "e",
+            "eke",
+            "eke@",
+            "eke@ael",
+            "eke@aelaw",
+            "eke@aelaw.",
+            "eke@aelaw.com"
+        ]
+    },
+    {
+        "email": "deb@aelaw.com",
+        "stages": [
+            "deb",
+            "deb@",
+            "deb@ael",
+            "deb@aelaw",
+            "deb@aelaw.",
+            "deb@aelaw.com"
+        ]
+    },
+    {
+        "email": "joan.stransky@enron.com",
+        "stages": [
+            "jo",
+            "joan",
+            "joan.",
+            "joan.str",
+            "joan.stransky",
+            "joan.stransky@",
+            "joan.stransky@en",
+            "joan.stransky@enron",
+            "joan.stransky@enron.",
+            "joan.stransky@enron.com"
+        ]
+    },
+    {
+        "email": "esther.buckley@enron.com",
+        "stages": [
+            "est",
+            "esther",
+            "esther.",
+            "esther.buck",
+            "esther.buckley",
+            "esther.buckley@",
+            "esther.buckley@en",
+            "esther.buckley@enron",
+            "esther.buckley@enron.",
+            "esther.buckley@enron.com"
+        ]
+    },
+    {
+        "email": "joya.davis@enron.com",
+        "stages": [
+            "joy",
+            "joya",
+            "joya.",
+            "joya.d",
+            "joya.davis",
+            "joya.davis@",
+            "joya.davis@en",
+            "joya.davis@enron",
+            "joya.davis@enron.",
+            "joya.davis@enron.com"
+        ]
+    },
+    {
+        "email": "ian.mckay@enron.com",
+        "stages": [
+            "ian",
+            "ian.",
+            "ian.m",
+            "ian.mck",
+            "ian.mckay",
+            "ian.mckay@",
+            "ian.mckay@en",
+            "ian.mckay@enron",
+            "ian.mckay@enron.",
+            "ian.mckay@enron.com"
+        ]
+    },
+    {
+        "email": "catherine.clark@enron.com",
+        "stages": [
+            "c",
+            "catherine",
+            "catherine.",
+            "catherine.cl",
+            "catherine.clark",
+            "catherine.clark@",
+            "catherine.clark@en",
+            "catherine.clark@enron",
+            "catherine.clark@enron.",
+            "catherine.clark@enron.com"
+        ]
+    },
+    {
+        "email": "dtang@cinergy.com",
+        "stages": [
+            "dt",
+            "dtang",
+            "dtang@",
+            "dtang@c",
+            "dtang@ciner",
+            "dtang@cinergy",
+            "dtang@cinergy.",
+            "dtang@cinergy.com"
+        ]
+    },
+    {
+        "email": "stanley.cocke@enron.com",
+        "stages": [
+            "stan",
+            "stanley",
+            "stanley.",
+            "stanley.c",
+            "stanley.coc",
+            "stanley.cocke",
+            "stanley.cocke@",
+            "stanley.cocke@en",
+            "stanley.cocke@enron",
+            "stanley.cocke@enron.",
+            "stanley.cocke@enron.com"
+        ]
+    },
+    {
+        "email": "sarita.garza@enron.com",
+        "stages": [
+            "s",
+            "sar",
+            "sarita",
+            "sarita.",
+            "sarita.gar",
+            "sarita.garza",
+            "sarita.garza@",
+            "sarita.garza@en",
+            "sarita.garza@enron",
+            "sarita.garza@enron.",
+            "sarita.garza@enron.com"
+        ]
+    },
+    {
+        "email": "stephen.allen@enron.com",
+        "stages": [
+            "step",
+            "stephen",
+            "stephen.",
+            "stephen.all",
+            "stephen.allen",
+            "stephen.allen@",
+            "stephen.allen@en",
+            "stephen.allen@enron",
+            "stephen.allen@enron.",
+            "stephen.allen@enron.com"
+        ]
+    },
+    {
+        "email": "iona.maclean@enron.com",
+        "stages": [
+            "iona",
+            "iona.",
+            "iona.m",
+            "iona.macle",
+            "iona.maclean",
+            "iona.maclean@",
+            "iona.maclean@en",
+            "iona.maclean@enron",
+            "iona.maclean@enron.",
+            "iona.maclean@enron.com"
+        ]
+    },
+    {
+        "email": "denise.lagesse@enron.com",
+        "stages": [
+            "den",
+            "denise",
+            "denise.",
+            "denise.l",
+            "denise.lages",
+            "denise.lagesse",
+            "denise.lagesse@",
+            "denise.lagesse@en",
+            "denise.lagesse@enron",
+            "denise.lagesse@enron.",
+            "denise.lagesse@enron.com"
+        ]
+    },
+    {
+        "email": "patti@enron.com",
+        "stages": [
+            "p",
+            "patti",
+            "patti@",
+            "patti@en",
+            "patti@enron",
+            "patti@enron.",
+            "patti@enron.com"
+        ]
+    },
+    {
+        "email": "rick.suderman@enron.com",
+        "stages": [
+            "rick",
+            "rick.",
+            "rick.s",
+            "rick.sud",
+            "rick.suderman",
+            "rick.suderman@",
+            "rick.suderman@en",
+            "rick.suderman@enron",
+            "rick.suderman@enron.",
+            "rick.suderman@enron.com"
+        ]
+    },
+    {
+        "email": "randy.otto@enron.com",
+        "stages": [
+            "r",
+            "randy",
+            "randy.",
+            "randy.otto",
+            "randy.otto@",
+            "randy.otto@en",
+            "randy.otto@enron",
+            "randy.otto@enron.",
+            "randy.otto@enron.com"
+        ]
+    },
+    {
+        "email": "glen.hass@enron.com",
+        "stages": [
+            "gl",
+            "glen",
+            "glen.",
+            "glen.h",
+            "glen.hass",
+            "glen.hass@",
+            "glen.hass@en",
+            "glen.hass@enron",
+            "glen.hass@enron.",
+            "glen.hass@enron.com"
+        ]
+    },
+    {
+        "email": "susan.runkel@enron.com",
+        "stages": [
+            "s",
+            "sus",
+            "susan",
+            "susan.",
+            "susan.run",
+            "susan.runkel",
+            "susan.runkel@",
+            "susan.runkel@en",
+            "susan.runkel@enron",
+            "susan.runkel@enron.",
+            "susan.runkel@enron.com"
+        ]
+    },
+    {
+        "email": "christina.valdez@enron.com",
+        "stages": [
+            "christ",
+            "christina",
+            "christina.",
+            "christina.v",
+            "christina.vald",
+            "christina.valdez",
+            "christina.valdez@",
+            "christina.valdez@en",
+            "christina.valdez@enron",
+            "christina.valdez@enron.",
+            "christina.valdez@enron.com"
+        ]
+    },
+    {
+        "email": "ward@enron.com",
+        "stages": [
+            "ward",
+            "ward@",
+            "ward@en",
+            "ward@enron",
+            "ward@enron.",
+            "ward@enron.com"
+        ]
+    },
+    {
+        "email": "jennifer.jordan@enron.com",
+        "stages": [
+            "j",
+            "jenn",
+            "jennifer",
+            "jennifer.",
+            "jennifer.j",
+            "jennifer.jordan",
+            "jennifer.jordan@",
+            "jennifer.jordan@en",
+            "jennifer.jordan@enron",
+            "jennifer.jordan@enron.",
+            "jennifer.jordan@enron.com"
+        ]
+    },
+    {
+        "email": "joni.thompson@enron.com",
+        "stages": [
+            "j",
+            "joni",
+            "joni.",
+            "joni.th",
+            "joni.thom",
+            "joni.thompson",
+            "joni.thompson@",
+            "joni.thompson@en",
+            "joni.thompson@enron",
+            "joni.thompson@enron.",
+            "joni.thompson@enron.com"
+        ]
+    },
+    {
+        "email": "rourke@enron.com",
+        "stages": [
+            "r",
+            "rourke",
+            "rourke@",
+            "rourke@en",
+            "rourke@enron",
+            "rourke@enron.",
+            "rourke@enron.com"
+        ]
+    },
+    {
+        "email": "mary.moore@enron.com",
+        "stages": [
+            "mary",
+            "mary.",
+            "mary.mo",
+            "mary.moore",
+            "mary.moore@",
+            "mary.moore@en",
+            "mary.moore@enron",
+            "mary.moore@enron.",
+            "mary.moore@enron.com"
+        ]
+    },
+    {
+        "email": "felecia.huhman@enron.com",
+        "stages": [
+            "fe",
+            "fele",
+            "felecia",
+            "felecia.",
+            "felecia.h",
+            "felecia.huh",
+            "felecia.huhman",
+            "felecia.huhman@",
+            "felecia.huhman@en",
+            "felecia.huhman@enron",
+            "felecia.huhman@enron.",
+            "felecia.huhman@enron.com"
+        ]
+    },
+    {
+        "email": "julie.armstrong@enron.com",
+        "stages": [
+            "j",
+            "jul",
+            "julie",
+            "julie.",
+            "julie.arm",
+            "julie.armstrong",
+            "julie.armstrong@",
+            "julie.armstrong@en",
+            "julie.armstrong@enron",
+            "julie.armstrong@enron.",
+            "julie.armstrong@enron.com"
+        ]
+    },
+    {
+        "email": "kim.melodick@enron.com",
+        "stages": [
+            "k",
+            "kim",
+            "kim.",
+            "kim.mel",
+            "kim.melod",
+            "kim.melodick",
+            "kim.melodick@",
+            "kim.melodick@en",
+            "kim.melodick@enron",
+            "kim.melodick@enron.",
+            "kim.melodick@enron.com"
+        ]
+    },
+    {
+        "email": "kim.wilkie@enron.com",
+        "stages": [
+            "k",
+            "kim",
+            "kim.",
+            "kim.w",
+            "kim.wilk",
+            "kim.wilkie",
+            "kim.wilkie@",
+            "kim.wilkie@en",
+            "kim.wilkie@enron",
+            "kim.wilkie@enron.",
+            "kim.wilkie@enron.com"
+        ]
+    },
+    {
+        "email": "kimberly.allen@enron.com",
+        "stages": [
+            "k",
+            "kim",
+            "kimber",
+            "kimberly",
+            "kimberly.",
+            "kimberly.all",
+            "kimberly.allen",
+            "kimberly.allen@",
+            "kimberly.allen@en",
+            "kimberly.allen@enron",
+            "kimberly.allen@enron.",
+            "kimberly.allen@enron.com"
+        ]
+    },
+    {
+        "email": "paula.rieker@enron.com",
+        "stages": [
+            "p",
+            "paul",
+            "paula",
+            "paula.",
+            "paula.ri",
+            "paula.rieker",
+            "paula.rieker@",
+            "paula.rieker@en",
+            "paula.rieker@enron",
+            "paula.rieker@enron.",
+            "paula.rieker@enron.com"
+        ]
+    },
+    {
+        "email": "johnny.palmer@enron.com",
+        "stages": [
+            "john",
+            "johnny",
+            "johnny.",
+            "johnny.pal",
+            "johnny.palmer",
+            "johnny.palmer@",
+            "johnny.palmer@en",
+            "johnny.palmer@enron",
+            "johnny.palmer@enron.",
+            "johnny.palmer@enron.com"
+        ]
+    },
+    {
+        "email": "cheryl.kondo@enron.com",
+        "stages": [
+            "cher",
+            "cheryl",
+            "cheryl.",
+            "cheryl.k",
+            "cheryl.kondo",
+            "cheryl.kondo@",
+            "cheryl.kondo@en",
+            "cheryl.kondo@enron",
+            "cheryl.kondo@enron.",
+            "cheryl.kondo@enron.com"
+        ]
+    },
+    {
+        "email": "johne@enron.com",
+        "stages": [
+            "j",
+            "joh",
+            "johne",
+            "johne@",
+            "johne@en",
+            "johne@enron",
+            "johne@enron.",
+            "johne@enron.com"
+        ]
+    },
+    {
+        "email": "medleyb@gtlaw.com",
+        "stages": [
+            "med",
+            "medley",
+            "medleyb",
+            "medleyb@",
+            "medleyb@gt",
+            "medleyb@gtlaw",
+            "medleyb@gtlaw.",
+            "medleyb@gtlaw.com"
+        ]
+    },
+    {
+        "email": "barshk@gtlaw.com",
+        "stages": [
+            "b",
+            "barsh",
+            "barshk",
+            "barshk@",
+            "barshk@gt",
+            "barshk@gtlaw",
+            "barshk@gtlaw.",
+            "barshk@gtlaw.com"
+        ]
+    },
+    {
+        "email": "dave.neubauer@enron.com",
+        "stages": [
+            "d",
+            "dave",
+            "dave.",
+            "dave.ne",
+            "dave.neub",
+            "dave.neubauer",
+            "dave.neubauer@",
+            "dave.neubauer@en",
+            "dave.neubauer@enron",
+            "dave.neubauer@enron.",
+            "dave.neubauer@enron.com"
+        ]
+    },
+    {
+        "email": "dari.dornan@enron.com",
+        "stages": [
+            "d",
+            "dari",
+            "dari.",
+            "dari.d",
+            "dari.dorn",
+            "dari.dornan",
+            "dari.dornan@",
+            "dari.dornan@en",
+            "dari.dornan@enron",
+            "dari.dornan@enron.",
+            "dari.dornan@enron.com"
+        ]
+    },
+    {
+        "email": "rahil.jafry@enron.com",
+        "stages": [
+            "rah",
+            "rahil",
+            "rahil.",
+            "rahil.j",
+            "rahil.jaf",
+            "rahil.jafry",
+            "rahil.jafry@",
+            "rahil.jafry@en",
+            "rahil.jafry@enron",
+            "rahil.jafry@enron.",
+            "rahil.jafry@enron.com"
+        ]
+    },
+    {
+        "email": "bardblack@aol.com",
+        "stages": [
+            "bard",
+            "bardblack",
+            "bardblack@",
+            "bardblack@a",
+            "bardblack@aol",
+            "bardblack@aol.",
+            "bardblack@aol.com"
+        ]
+    },
+    {
+        "email": "perry.frazier@enron.com",
+        "stages": [
+            "per",
+            "perry",
+            "perry.",
+            "perry.f",
+            "perry.fraz",
+            "perry.frazier",
+            "perry.frazier@",
+            "perry.frazier@en",
+            "perry.frazier@enron",
+            "perry.frazier@enron.",
+            "perry.frazier@enron.com"
+        ]
+    },
+    {
+        "email": "max.brown@enron.com",
+        "stages": [
+            "max",
+            "max.",
+            "max.brown",
+            "max.brown@",
+            "max.brown@en",
+            "max.brown@enron",
+            "max.brown@enron.",
+            "max.brown@enron.com"
+        ]
+    },
+    {
+        "email": "jerry.graves@enron.com",
+        "stages": [
+            "j",
+            "jerry",
+            "jerry.",
+            "jerry.gra",
+            "jerry.graves",
+            "jerry.graves@",
+            "jerry.graves@en",
+            "jerry.graves@enron",
+            "jerry.graves@enron.",
+            "jerry.graves@enron.com"
+        ]
+    },
+    {
+        "email": "jesse.alvarado@enron.com",
+        "stages": [
+            "j",
+            "jesse",
+            "jesse.",
+            "jesse.al",
+            "jesse.alvar",
+            "jesse.alvarado",
+            "jesse.alvarado@",
+            "jesse.alvarado@en",
+            "jesse.alvarado@enron",
+            "jesse.alvarado@enron.",
+            "jesse.alvarado@enron.com"
+        ]
+    },
+    {
+        "email": "carl.carter@enron.com",
+        "stages": [
+            "c",
+            "carl",
+            "carl.",
+            "carl.c",
+            "carl.carter",
+            "carl.carter@",
+            "carl.carter@en",
+            "carl.carter@enron",
+            "carl.carter@enron.",
+            "carl.carter@enron.com"
+        ]
+    },
+    {
+        "email": "david.roensch@enron.com",
+        "stages": [
+            "d",
+            "david",
+            "david.",
+            "david.ro",
+            "david.roens",
+            "david.roensch",
+            "david.roensch@",
+            "david.roensch@en",
+            "david.roensch@enron",
+            "david.roensch@enron.",
+            "david.roensch@enron.com"
+        ]
+    },
+    {
+        "email": "charles.yeung@enron.com",
+        "stages": [
+            "char",
+            "charles",
+            "charles.",
+            "charles.ye",
+            "charles.yeung",
+            "charles.yeung@",
+            "charles.yeung@en",
+            "charles.yeung@enron",
+            "charles.yeung@enron.",
+            "charles.yeung@enron.com"
+        ]
+    },
+    {
+        "email": "ravi.thuraisingham@enron.com",
+        "stages": [
+            "rav",
+            "ravi",
+            "ravi.",
+            "ravi.th",
+            "ravi.thura",
+            "ravi.thuraising",
+            "ravi.thuraisingham",
+            "ravi.thuraisingham@",
+            "ravi.thuraisingham@en",
+            "ravi.thuraisingham@enron",
+            "ravi.thuraisingham@enron.",
+            "ravi.thuraisingham@enron.com"
+        ]
+    },
+    {
+        "email": "mwilczek@nyiso.com",
+        "stages": [
+            "m",
+            "mw",
+            "mwil",
+            "mwilcz",
+            "mwilczek",
+            "mwilczek@",
+            "mwilczek@ny",
+            "mwilczek@nyiso",
+            "mwilczek@nyiso.",
+            "mwilczek@nyiso.com"
+        ]
+    },
+    {
+        "email": "raymond.bowen@enron.com",
+        "stages": [
+            "ray",
+            "raymond",
+            "raymond.",
+            "raymond.bow",
+            "raymond.bowen",
+            "raymond.bowen@",
+            "raymond.bowen@en",
+            "raymond.bowen@enron",
+            "raymond.bowen@enron.",
+            "raymond.bowen@enron.com"
+        ]
+    },
+    {
+        "email": "john.dunn@enform.com",
+        "stages": [
+            "john",
+            "john.",
+            "john.d",
+            "john.dunn",
+            "john.dunn@",
+            "john.dunn@en",
+            "john.dunn@enform",
+            "john.dunn@enform.",
+            "john.dunn@enform.com"
+        ]
+    },
+    {
+        "email": "dawn.kenne@enron.com",
+        "stages": [
+            "d",
+            "dawn",
+            "dawn.",
+            "dawn.ken",
+            "dawn.kenne",
+            "dawn.kenne@",
+            "dawn.kenne@en",
+            "dawn.kenne@enron",
+            "dawn.kenne@enron.",
+            "dawn.kenne@enron.com"
+        ]
+    },
+    {
+        "email": "beth.cherry@enform.com",
+        "stages": [
+            "b",
+            "beth",
+            "beth.",
+            "beth.cher",
+            "beth.cherry",
+            "beth.cherry@",
+            "beth.cherry@en",
+            "beth.cherry@enform",
+            "beth.cherry@enform.",
+            "beth.cherry@enform.com"
+        ]
+    },
+    {
+        "email": "jane.tholt@enron.com",
+        "stages": [
+            "j",
+            "jane",
+            "jane.",
+            "jane.th",
+            "jane.tholt",
+            "jane.tholt@",
+            "jane.tholt@en",
+            "jane.tholt@enron",
+            "jane.tholt@enron.",
+            "jane.tholt@enron.com"
+        ]
+    },
+    {
+        "email": "mark.shea@bankofamerica.com",
+        "stages": [
+            "mark",
+            "mark.",
+            "mark.she",
+            "mark.shea",
+            "mark.shea@",
+            "mark.shea@bank",
+            "mark.shea@bankof",
+            "mark.shea@bankofamer",
+            "mark.shea@bankofamerica",
+            "mark.shea@bankofamerica.",
+            "mark.shea@bankofamerica.com"
+        ]
+    },
+    {
+        "email": "j..noske@enron.com",
+        "stages": [
+            "j",
+            "j..",
+            "j..nos",
+            "j..noske",
+            "j..noske@",
+            "j..noske@en",
+            "j..noske@enron",
+            "j..noske@enron.",
+            "j..noske@enron.com"
+        ]
+    },
+    {
+        "email": "timothy.versacci@enron.com",
+        "stages": [
+            "tim",
+            "timothy",
+            "timothy.",
+            "timothy.vers",
+            "timothy.versacci",
+            "timothy.versacci@",
+            "timothy.versacci@en",
+            "timothy.versacci@enron",
+            "timothy.versacci@enron.",
+            "timothy.versacci@enron.com"
+        ]
+    },
+    {
+        "email": "dan.leff@enron.com",
+        "stages": [
+            "dan",
+            "dan.",
+            "dan.le",
+            "dan.leff",
+            "dan.leff@",
+            "dan.leff@en",
+            "dan.leff@enron",
+            "dan.leff@enron.",
+            "dan.leff@enron.com"
+        ]
+    },
+    {
+        "email": "neil.bresnan@enron.com",
+        "stages": [
+            "ne",
+            "neil",
+            "neil.",
+            "neil.b",
+            "neil.bres",
+            "neil.bresnan",
+            "neil.bresnan@",
+            "neil.bresnan@en",
+            "neil.bresnan@enron",
+            "neil.bresnan@enron.",
+            "neil.bresnan@enron.com"
+        ]
+    },
+    {
+        "email": "mary.schoen@enron.com",
+        "stages": [
+            "mary",
+            "mary.",
+            "mary.sch",
+            "mary.schoen",
+            "mary.schoen@",
+            "mary.schoen@en",
+            "mary.schoen@enron",
+            "mary.schoen@enron.",
+            "mary.schoen@enron.com"
+        ]
+    },
+    {
+        "email": "marion.sczykutowicz@enron.com",
+        "stages": [
+            "mar",
+            "marion",
+            "marion.",
+            "marion.sc",
+            "marion.sczyk",
+            "marion.sczykut",
+            "marion.sczykutowicz",
+            "marion.sczykutowicz@",
+            "marion.sczykutowicz@en",
+            "marion.sczykutowicz@enron",
+            "marion.sczykutowicz@enron.",
+            "marion.sczykutowicz@enron.com"
+        ]
+    },
+    {
+        "email": "alex.huang@enron.com",
+        "stages": [
+            "ale",
+            "alex",
+            "alex.",
+            "alex.hu",
+            "alex.huang",
+            "alex.huang@",
+            "alex.huang@en",
+            "alex.huang@enron",
+            "alex.huang@enron.",
+            "alex.huang@enron.com"
+        ]
+    }
+]
